@@ -1,0 +1,83 @@
+﻿@model IEnumerable<AuthSystem.Models.Agreement>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a onclick="showInPopup('@Url.Action("AddOrEdit","Agreement",null,Context.Request.Scheme)','New Agreement')" class="btn btn-success text-white"><i class="fas fa-random"></i> New Agreement</a>
+</p>
+<table class="table" id="agreementManagement">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.UserId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ProductGroup)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Product)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.EffectiveDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ExpirationDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ProductPrice)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.NewPrice)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ApplicationUser.UserName)
+                </td>
+                <td title="@item.ProductGroup.GroupDescription">
+                    <span data-toggle="tooltip" data-original-title="@item.ProductGroup.GroupDescription" data-placement="top" data-trigger="hover">
+                        @Html.DisplayFor(modelItem => item.ProductGroup.GroupCode)
+                    </span>
+                </td>
+                <td title="@item.Product.ProductDescription">
+                    <span data-toggle="tooltip" data-original-title="@item.Product.ProductDescription" data-placement="top" data-trigger="hover">
+                    @Html.DisplayFor(modelItem => item.Product.ProductNumber)
+                    </span>
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.EffectiveDate)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ExpirationDate)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ProductPrice)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.NewPrice)
+                </td>
+
+
+                <td>
+                    <div>
+                        <a onclick="showInPopup('@Url.Action("AddOrEdit","Agreement",new {id=item.Id},Context.Request.Scheme)','Update Agreement')" class="btn btn-info text-white"><i class="fas fa-pencil-alt"></i> Edit</a>
+                        <form asp-action="Delete" asp-route-id="@item.Id" onsubmit="return deleteAgreement(this)" class="d-inline">
+                            <input type="hidden" asp-for="@item.Id" />
+                            <input type="submit" value="Delete" class="btn btn-danger" />
+                        </form>
+                        </div>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

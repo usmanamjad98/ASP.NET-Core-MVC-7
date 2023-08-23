@@ -1,0 +1,116 @@
+﻿@model AuthSystem.Models.Agreement
+
+@{
+    ViewData["Title"] = "Edit";
+    Layout = null;
+}
+<style>
+    .border-color {
+        border-color: red !important;
+    }
+</style>
+
+<div class="row">
+    <div class="col-md-12">
+        <form asp-action="AddorEdit" asp-route-id="@Model.Id" onsubmit="return submitForm(event,this);">
+            @Html.AntiForgeryToken()
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Id" />
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label asp-for="ProductGroupId" class="control-label"></label>
+                        <select asp-for="ProductGroupId" class="form-control" asp-items="@(new SelectList(ViewBag.ProductGroups, nameof(Model.ProductGroup.Id), nameof(Model.ProductGroup.GroupCode)))">
+                            <option value="0">Select one</option>
+                        </select>
+                        <span asp-validation-for="ProductGroupId" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label asp-for="ProductId" class="control-label"></label>
+                        <select asp-for="ProductId" class="form-control" asp-items="ViewBag.ProductId" value="@Model.ProductId">
+                            <option value="0">Select one</option>
+                        </select>
+                        <span asp-validation-for="ProductId" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label asp-for="EffectiveDate" class="control-label"></label>
+                        <input asp-for="EffectiveDate" type="date" format="MM/dd/yyyy" class="form-control" />
+                        <span asp-validation-for="EffectiveDate" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label asp-for="ExpirationDate" class="control-label"></label>
+                        <input asp-for="ExpirationDate" type="date" format="MM/dd/yyyy" class="form-control" />
+                        <span asp-validation-for="ExpirationDate" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label asp-for="ProductPrice" class="control-label"></label>
+                        <input asp-for="ProductPrice" type="number" class="form-control" />
+                        <span asp-validation-for="ProductPrice" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label asp-for="NewPrice" class="control-label"></label>
+                        <input asp-for="NewPrice" type="number" class="form-control" />
+                        <span asp-validation-for="NewPrice" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group form-check">
+                        <label class="form-check-label">
+                            <input class="form-check-input" asp-for="Active" /> @Html.DisplayNameFor(model => model.Active)
+                            <span asp-validation-for="Active" class="text-danger"></span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <hr />
+            <div class="row">
+
+                <div class="form-group">
+                    <input type="submit" value="Save" class="btn btn-primary" />
+                </div>
+            </div>
+
+        </form>
+    </div>
+</div>
+<hr />
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+<script>
+
+    $(document).ready(function () {
+        $.ajax({
+            type: 'GET',
+            url: '/Agreement/GetProductByGroup?id=' + $("#ProductGroupId").val(),
+            contentType: "application/json",
+            dataType: 'json',
+            success: function (res) {
+                html = "";
+                for (var i = 0; i < res.length; i++) {
+                    html += "<option value='" + res[i].id + "'>" + res[i].productNumber + "</option>";
+                }
+
+                $("#ProductId").append(html);
+                $("#ProductId").val(@Model.ProductId);
+            }
+        })
+    })
+</script>
